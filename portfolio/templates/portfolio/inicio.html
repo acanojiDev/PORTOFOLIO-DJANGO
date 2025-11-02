@@ -1,0 +1,90 @@
+{% extends 'portfolio/base.html' %}
+
+{% block title %}Inicio - Portfolio Profesional{% endblock %}
+
+{% block content %}
+{% if perfil %}
+<section class="hero-section">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-6">
+                <h1 class="display-4 fw-bold mb-4">Hola, soy {{ perfil.nombre }}</h1>
+                <p class="lead mb-4">{{ perfil.titulo }}</p>
+                <p class="mb-4">{{ perfil.biografia|truncatewords:30 }}</p>
+                <a href="{% url 'trabajos' %}" class="btn btn-light btn-lg me-3">Ver Trabajos</a>
+                <a href="{% url 'contacto' %}" class="btn btn-outline-light btn-lg">Contactar</a>
+            </div>
+            <div class="col-lg-6 text-center">
+                {% if perfil.foto %}
+                <img src="{{ perfil.foto.url }}" alt="{{ perfil.nombre }}" class="perfil-foto">
+                {% else %}
+                <div class="perfil-foto bg-light d-flex align-items-center justify-content-center mx-auto">
+                    <i class="bi bi-person" style="font-size: 100px; color: #ccc;"></i>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</section>
+{% endif %}
+
+<section class="container mb-5">
+    <h2 class="section-title text-center">Trabajos Destacados</h2>
+    <div class="row">
+        {% if trabajos_destacados %}
+            {% for trabajo in trabajos_destacados %}
+            <div class="col-md-4 mb-4">
+                <div class="card h-100">
+                    {% if trabajo.imagen %}
+                    <img src="{{ trabajo.imagen.url }}" class="card-img-top" alt="{{ trabajo.titulo }}" style="height: 200px; object-fit: cover;">
+                    {% else %}
+                    <div class="card-img-top bg-light d-flex align-items-center justify-content-center" style="height: 200px;">
+                        <i class="bi bi-image" style="font-size: 60px; color: #ccc;"></i>
+                    </div>
+                    {% endif %}
+                    <div class="card-body">
+                        <span class="badge-custom mb-2">{{ trabajo.get_tipo_display }}</span>
+                        <h5 class="card-title">{{ trabajo.titulo }}</h5>
+                        <p class="card-text">{{ trabajo.descripcion|truncatewords:20 }}</p>
+                        <a href="{% url 'trabajo_detalle' trabajo.id %}" class="btn btn-primary btn-sm">Ver Detalles</a>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        {% else %}
+        <div class="col-12 text-center py-5">
+            <p class="text-muted">No hay trabajos destacados todavía.</p>
+        </div>
+        {% endif %}
+    </div>
+    {% if trabajos_destacados %}
+    <div class="text-center mt-4">
+        <a href="{% url 'trabajos' %}" class="btn btn-outline-primary">Ver Todos los Trabajos</a>
+    </div>
+    {% endif %}
+</section>
+
+{% if perfil %}
+<section class="container mb-5">
+    <div class="row">
+        <div class="col-lg-6">
+            <h2 class="section-title">Sobre Mí</h2>
+            <p>{{ perfil.biografia|truncatewords:50 }}</p>
+            <a href="{% url 'acerca_de' %}" class="btn btn-primary">Más Sobre Mí</a>
+        </div>
+        <div class="col-lg-6">
+            <h2 class="section-title">Contacto</h2>
+            <p><i class="bi bi-envelope me-2"></i> {{ perfil.email }}</p>
+            {% if perfil.telefono %}
+            <p><i class="bi bi-telephone me-2"></i> {{ perfil.telefono }}</p>
+            {% endif %}
+            {% if perfil.ubicacion %}
+            <p><i class="bi bi-geo-alt me-2"></i> {{ perfil.ubicacion }}</p>
+            {% endif %}
+            <a href="{% url 'contacto' %}" class="btn btn-primary mt-3">Enviar Mensaje</a>
+        </div>
+    </div>
+</section>
+{% endif %}
+{% endblock %}
+

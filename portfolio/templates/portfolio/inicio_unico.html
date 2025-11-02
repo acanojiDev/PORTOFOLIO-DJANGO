@@ -1,0 +1,411 @@
+{% extends 'portfolio/base.html' %}
+
+{% block title %}Portfolio Profesional{% endblock %}
+
+{% block content %}
+{% if perfil %}
+<section id="inicio" class="hero-section scroll-section" style="padding-top: 80px;">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-6 animate-on-scroll" data-animation="fadeInLeft">
+                <h1 class="display-4 fw-bold mb-4">Hola, soy {{ perfil.nombre }}</h1>
+                <p class="lead mb-4">{{ perfil.titulo }}</p>
+                <p class="mb-4">{{ perfil.biografia|truncatewords:30 }}</p>
+                <a href="#trabajos" class="btn btn-light btn-lg me-3">Ver Trabajos</a>
+                <a href="#contacto" class="btn btn-outline-light btn-lg">Contactar</a>
+            </div>
+            <div class="col-lg-6 text-center animate-on-scroll" data-animation="fadeInRight">
+                {% if perfil.foto %}
+                <img src="{{ perfil.foto.url }}" alt="{{ perfil.nombre }}" class="perfil-foto">
+                {% else %}
+                <div class="perfil-foto bg-light d-flex align-items-center justify-content-center mx-auto">
+                    <i class="bi bi-person" style="font-size: 100px; color: #ccc;"></i>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</section>
+{% endif %}
+
+<section id="trabajos" class="container py-5 scroll-section" style="padding-top: 100px;">
+    <h2 class="section-title text-center mb-5 animate-on-scroll" data-animation="fadeInUp">Trabajos Realizados</h2>
+    
+    <div class="mb-4 text-center animate-on-scroll" data-animation="fadeInUp" data-delay="100">
+        <div class="btn-group filter-buttons" role="group">
+            <button class="btn btn-outline-primary active" data-filter="all">Todos</button>
+            <button class="btn btn-outline-primary" data-filter="profesional">Profesionales</button>
+            <button class="btn btn-outline-primary" data-filter="personal">Personales</button>
+            <button class="btn btn-outline-primary" data-filter="academico">Académicos</button>
+        </div>
+    </div>
+    
+    <div class="row" id="trabajos-container">
+        {% if trabajos %}
+            {% for trabajo in trabajos %}
+            <div class="col-md-6 col-lg-4 mb-4 trabajo-item animate-on-scroll" data-animation="fadeInUp" data-tipo="{{ trabajo.tipo }}" data-delay="{{ forloop.counter0|add:200 }}">
+                <div class="card h-100">
+                    {% if trabajo.imagen %}
+                    <img src="{{ trabajo.imagen.url }}" class="card-img-top" alt="{{ trabajo.titulo }}" style="height: 250px; object-fit: cover;">
+                    {% else %}
+                    <div class="card-img-top bg-light d-flex align-items-center justify-content-center" style="height: 250px;">
+                        <i class="bi bi-image" style="font-size: 60px; color: #ccc;"></i>
+                    </div>
+                    {% endif %}
+                    <div class="card-body d-flex flex-column">
+                        <span class="badge-custom mb-2">{{ trabajo.get_tipo_display }}</span>
+                        <h5 class="card-title">{{ trabajo.titulo }}</h5>
+                        <p class="card-text flex-grow-1">{{ trabajo.descripcion|truncatewords:25 }}</p>
+                        {% if trabajo.fecha_realizacion %}
+                        <p class="text-muted small mb-2">
+                            <i class="bi bi-calendar me-1"></i>{{ trabajo.fecha_realizacion|date:"F Y" }}
+                        </p>
+                        {% endif %}
+                        <div class="mt-auto">
+                            {% if trabajo.url_proyecto %}
+                            <a href="{{ trabajo.url_proyecto }}" target="_blank" class="btn btn-primary btn-sm me-2">
+                                <i class="bi bi-box-arrow-up-right me-1"></i>Ver Proyecto
+                            </a>
+                            {% endif %}
+                            {% if trabajo.url_repositorio %}
+                            <a href="{{ trabajo.url_repositorio }}" target="_blank" class="btn btn-outline-primary btn-sm">
+                                <i class="bi bi-github me-1"></i>Repositorio
+                            </a>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        {% else %}
+        <div class="col-12 text-center py-5 animate-on-scroll" data-animation="fadeInUp">
+            <i class="bi bi-inbox" style="font-size: 80px; color: #ccc;"></i>
+            <p class="text-muted mt-3">No hay trabajos disponibles todavía.</p>
+        </div>
+        {% endif %}
+    </div>
+</section>
+
+<section id="curriculum" class="container py-5 scroll-section" style="padding-top: 80px;">
+    <h2 class="section-title text-center mb-5 animate-on-scroll" data-animation="fadeInUp">Currículum</h2>
+    
+    <div class="timeline">
+        {% if curriculum_items %}
+            {% for item in curriculum_items %}
+            <div class="timeline-item" data-animation="fadeInUp">
+                <div class="timeline-dot"></div>
+                <div class="timeline-content">
+                    <span class="badge-custom mb-2">{{ item.get_tipo_display }}</span>
+                    <h4 class="mb-2">{{ item.titulo }}</h4>
+                    <h5 class="text-primary mb-2">{{ item.empresa_institucion }}</h5>
+                    {% if item.ubicacion %}
+                    <p class="text-muted small mb-2"><i class="bi bi-geo-alt me-1"></i>{{ item.ubicacion }}</p>
+                    {% endif %}
+                    <p class="text-muted small mb-3">
+                        <i class="bi bi-calendar me-1"></i>
+                        {{ item.fecha_inicio|date:"M Y" }} - 
+                        {% if item.es_actual or not item.fecha_fin %}
+                            <span class="badge bg-success">Actual</span>
+                        {% else %}
+                            {{ item.fecha_fin|date:"M Y" }}
+                        {% endif %}
+                    </p>
+                    <p>{{ item.descripcion|linebreaks }}</p>
+                </div>
+            </div>
+            {% endfor %}
+        {% else %}
+        <div class="text-center py-5 animate-on-scroll" data-animation="fadeInUp">
+            <p class="text-muted">Agrega tu experiencia y educación desde el panel de administración.</p>
+        </div>
+        {% endif %}
+    </div>
+</section>
+
+<section id="tecnologias" class="py-5 scroll-section" style="padding-top: 80px; position: relative; overflow: hidden;">
+    <div class="tech-bg-decoration"></div>
+    
+    <div class="container position-relative">
+        <div class="text-center mb-5 animate-on-scroll" data-animation="fadeInUp">
+            <span class="section-badge mb-3">Stack Tecnológico</span>
+            <h2 class="section-title display-4 fw-bold mb-3">Tecnologías que Manejo</h2>
+            <p class="lead text-muted col-lg-6 mx-auto">Herramientas y tecnologías con las que trabajo día a día</p>
+        </div>
+        
+        {% if tecnologias_circulo %}
+        <div class="tech-showcase-wrapper">
+            <div class="tecnologias-circular-container" id="tecnologias-container">
+                <div class="tech-center-circle">
+                    <i class="bi bi-code-slash"></i>
+                    <span>Tech Stack</span>
+                </div>
+                
+                {% for tecnologia in tecnologias_circulo %}
+                <div class="tecnologia-item-circular" data-tech="{{ tecnologia.nombre }}">
+                    <div class="tech-icon-wrapper">
+                        {% if tecnologia.imagen %}
+                        <img src="{{ tecnologia.imagen.url }}" alt="{{ tecnologia.nombre }}" loading="lazy">
+                        {% else %}
+                        <span class="tech-initial">{{ tecnologia.nombre|first|upper }}</span>
+                        {% endif %}
+                    </div>
+                    <div class="tech-glow"></div>
+                    <span class="tooltip-tech">{{ tecnologia.nombre }}</span>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        {% else %}
+        <div class="text-center py-5 animate-on-scroll" data-animation="fadeInUp">
+            <div class="empty-state-card">
+                <i class="bi bi-layers" style="font-size: 4rem; color: #cbd5e1;"></i>
+                <p class="mt-3 text-muted">Agrega tecnologías y marca "Mostrar en círculo" desde el panel de administración.</p>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</section>
+
+<section id="acerca-de" class="py-5 scroll-section" style="padding-top: 80px; background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);">
+    <div class="container">
+        <div class="row justify-content-center mb-5">
+            <div class="col-lg-10">
+                <div class="card about-main-card shadow-lg border-0 mb-5 animate-on-scroll" data-animation="fadeInUp">
+                    <div class="card-body p-5">
+                        <div class="row align-items-center">
+                            <div class="col-lg-4 text-center mb-4 mb-lg-0">
+                                <div class="profile-image-wrapper">
+                                    {% if perfil.foto %}
+                                    <img src="{{ perfil.foto.url }}" alt="{{ perfil.nombre }}" class="profile-image-main">
+                                    {% else %}
+                                    <div class="profile-image-main bg-light d-flex align-items-center justify-content-center">
+                                        <i class="bi bi-person" style="font-size: 100px; color: #cbd5e1;"></i>
+                                    </div>
+                                    {% endif %}
+                                    <div class="profile-badge">
+                                        <i class="bi bi-check-circle-fill"></i>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-8">
+                                <h1 class="display-5 fw-bold mb-3">{{ perfil.nombre }}</h1>
+                                <p class="lead text-primary mb-4">{{ perfil.titulo }}</p>
+                                
+                                <div class="row g-3 mb-4">
+                                    <div class="col-md-6">
+                                        <div class="info-item">
+                                            <i class="bi bi-envelope-fill text-primary"></i>
+                                            <a href="mailto:{{ perfil.email }}">{{ perfil.email }}</a>
+                                        </div>
+                                    </div>
+                                    {% if perfil.telefono %}
+                                    <div class="col-md-6">
+                                        <div class="info-item">
+                                            <i class="bi bi-telephone-fill text-primary"></i>
+                                            <span>{{ perfil.telefono }}</span>
+                                        </div>
+                                    </div>
+                                    {% endif %}
+                                    {% if perfil.ubicacion %}
+                                    <div class="col-md-6">
+                                        <div class="info-item">
+                                            <i class="bi bi-geo-alt-fill text-primary"></i>
+                                            <span>{{ perfil.ubicacion }}</span>
+                                        </div>
+                                    </div>
+                                    {% endif %}
+                                </div>
+                                
+                                <div class="social-buttons">
+                                    {% if perfil.linkedin %}
+                                    <a href="{{ perfil.linkedin }}" target="_blank" class="social-btn linkedin">
+                                        <i class="bi bi-linkedin"></i>
+                                    </a>
+                                    {% endif %}
+                                    {% if perfil.github %}
+                                    <a href="{{ perfil.github }}" target="_blank" class="social-btn github">
+                                        <i class="bi bi-github"></i>
+                                    </a>
+                                    {% endif %}
+                                    {% if perfil.twitter %}
+                                    <a href="{{ perfil.twitter }}" target="_blank" class="social-btn twitter">
+                                        <i class="bi bi-twitter"></i>
+                                    </a>
+                                    {% endif %}
+                                    {% if perfil.instagram %}
+                                    <a href="{{ perfil.instagram }}" target="_blank" class="social-btn instagram">
+                                        <i class="bi bi-instagram"></i>
+                                    </a>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="card shadow border-0 mb-4 animate-on-scroll" data-animation="fadeInUp" data-delay="100">
+                    <div class="card-body p-5">
+                        <div class="section-icon mb-3">
+                            <i class="bi bi-file-person-fill"></i>
+                        </div>
+                        <h3 class="mb-4 fw-bold">Biografía</h3>
+                        <div class="bio-text">
+                            {{ perfil.biografia|linebreaks }}
+                        </div>
+                    </div>
+                </div>
+                
+                {% if perfil.objetivos %}
+                <div class="card shadow border-0 mb-4 animate-on-scroll" data-animation="fadeInUp" data-delay="200">
+                    <div class="card-body p-5">
+                        <div class="section-icon mb-3">
+                            <i class="bi bi-bullseye"></i>
+                        </div>
+                        <h3 class="mb-4 fw-bold">Objetivos Profesionales</h3>
+                        <div class="bio-text">
+                            {{ perfil.objetivos|linebreaks }}
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+                
+                {% if habilidades_por_categoria %}
+                <div class="card shadow border-0 animate-on-scroll" data-animation="fadeInUp" data-delay="300">
+                    <div class="card-body p-5">
+                        <div class="section-icon mb-3">
+                            <i class="bi bi-code-slash"></i>
+                        </div>
+                        <h3 class="mb-5 fw-bold text-center">Habilidades Técnicas</h3>
+                        <div class="row g-4">
+                            {% for categoria, habilidades in habilidades_por_categoria.items %}
+                            <div class="col-md-6 col-lg-4">
+                                <div class="category-card">
+                                    <h5 class="category-title">
+                                        <i class="bi bi-tag-fill me-2"></i>{{ categoria }}
+                                    </h5>
+                                    <div class="skills-list">
+                                        {% for habilidad in habilidades %}
+                                        <div class="skill-chip">
+                                            <span class="skill-name">{{ habilidad.nombre }}</span>
+                                            <span class="skill-level skill-level-{{ habilidad.nivel }}">{{ habilidad.get_nivel_display }}</span>
+                                        </div>
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</section>
+
+<section id="contacto" class="container py-5 scroll-section" style="padding-top: 80px;">
+    <h1 class="section-title text-center mb-5 animate-on-scroll" data-animation="fadeInUp">Contacto</h1>
+    
+    <div class="row">
+        <div class="col-lg-4 mb-5 animate-on-scroll" data-animation="fadeInLeft">
+            <h3 class="mb-4">Información de Contacto</h3>
+            {% if perfil %}
+            <div class="mb-4">
+                <p><i class="bi bi-envelope me-2"></i> <a href="mailto:{{ perfil.email }}">{{ perfil.email }}</a></p>
+                {% if perfil.telefono %}
+                <p><i class="bi bi-telephone me-2"></i> {{ perfil.telefono }}</p>
+                {% endif %}
+                {% if perfil.ubicacion %}
+                <p><i class="bi bi-geo-alt me-2"></i> {{ perfil.ubicacion }}</p>
+                {% endif %}
+            </div>
+            
+            <div class="mb-4">
+                <h5 class="mb-3">Sígueme en:</h5>
+                <div>
+                    {% if perfil.linkedin %}
+                    <a href="{{ perfil.linkedin }}" target="_blank" class="btn btn-outline-primary me-2 mb-2">
+                        <i class="bi bi-linkedin"></i> LinkedIn
+                    </a>
+                    {% endif %}
+                    {% if perfil.github %}
+                    <a href="{{ perfil.github }}" target="_blank" class="btn btn-outline-dark me-2 mb-2">
+                        <i class="bi bi-github"></i> GitHub
+                    </a>
+                    {% endif %}
+                    {% if perfil.twitter %}
+                    <a href="{{ perfil.twitter }}" target="_blank" class="btn btn-outline-info me-2 mb-2">
+                        <i class="bi bi-twitter"></i> Twitter
+                    </a>
+                    {% endif %}
+                    {% if perfil.instagram %}
+                    <a href="{{ perfil.instagram }}" target="_blank" class="btn btn-outline-danger me-2 mb-2">
+                        <i class="bi bi-instagram"></i> Instagram
+                    </a>
+                    {% endif %}
+                </div>
+            </div>
+            {% endif %}
+        </div>
+        
+        <div class="col-lg-8 animate-on-scroll" data-animation="fadeInRight">
+            <h3 class="mb-4">Envíame un Mensaje</h3>
+            <form method="post" class="needs-validation" novalidate>
+                {% csrf_token %}
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label for="{{ form.nombre.id_for_label }}" class="form-label">{{ form.nombre.label }}</label>
+                        {{ form.nombre }}
+                        {% if form.nombre.errors %}
+                        <div class="text-danger small">{{ form.nombre.errors }}</div>
+                        {% endif %}
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label for="{{ form.email.id_for_label }}" class="form-label">{{ form.email.label }}</label>
+                        {{ form.email }}
+                        {% if form.email.errors %}
+                        <div class="text-danger small">{{ form.email.errors }}</div>
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <label for="{{ form.asunto.id_for_label }}" class="form-label">{{ form.asunto.label }}</label>
+                    {{ form.asunto }}
+                    {% if form.asunto.errors %}
+                    <div class="text-danger small">{{ form.asunto.errors }}</div>
+                    {% endif %}
+                </div>
+                <div class="mb-3">
+                    <label for="{{ form.mensaje.id_for_label }}" class="form-label">{{ form.mensaje.label }}</label>
+                    {{ form.mensaje }}
+                    {% if form.mensaje.errors %}
+                    <div class="text-danger small">{{ form.mensaje.errors }}</div>
+                    {% endif %}
+                </div>
+                <button type="submit" class="btn btn-primary btn-lg">
+                    <i class="bi bi-send me-2"></i>Enviar Mensaje
+                </button>
+            </form>
+        </div>
+    </div>
+</section>
+
+{% block extra_js %}
+<script>
+(function() {
+    'use strict';
+    var forms = document.querySelectorAll('.needs-validation');
+    Array.prototype.slice.call(forms).forEach(function(form) {
+        form.addEventListener('submit', function(event) {
+            if (!form.checkValidity()) {
+                event.preventDefault();
+                event.stopPropagation();
+            }
+            form.classList.add('was-validated');
+        }, false);
+    });
+})();
+</script>
+{% endblock %}
+{% endblock %}
+

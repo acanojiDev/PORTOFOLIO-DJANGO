@@ -1,0 +1,105 @@
+{% extends 'portfolio/base.html' %}
+
+{% block title %}Acerca de Mí - Portfolio Profesional{% endblock %}
+
+{% block content %}
+{% if perfil %}
+<section class="container mt-5 pt-5 mb-5">
+    <div class="row">
+        <div class="col-lg-4 text-center mb-5">
+            {% if perfil.foto %}
+            <img src="{{ perfil.foto.url }}" alt="{{ perfil.nombre }}" class="perfil-foto mb-4">
+            {% else %}
+            <div class="perfil-foto bg-light d-flex align-items-center justify-content-center mx-auto mb-4">
+                <i class="bi bi-person" style="font-size: 100px; color: #ccc;"></i>
+            </div>
+            {% endif %}
+            <h2 class="mb-3">{{perfil.nombre}}</h2>
+            <p class="lead text-muted mb-4">{{perfil.titulo}}</p>
+            
+            <div class="text-start">
+                <p><i class="bi bi-envelope me-2"></i> <a href="mailto:{{ perfil.email }}">{{ perfil.email }}</a></p>
+                {% if perfil.telefono %}
+                <p><i class="bi bi-telephone me-2"></i> {{perfil.telefono}}</p>
+                {% endif %}
+                {% if perfil.ubicacion %}
+                <p><i class="bi bi-geo-alt me-2"></i> {{ perfil.ubicacion }}</p>
+                {% endif %}
+            </div>
+            
+            <div class="mt-4">
+                {% if perfil.linkedin %}
+                <a href="{{ perfil.linkedin }}" target="_blank" class="btn btn-outline-primary me-2 mb-2">
+                    <i class="bi bi-linkedin"></i> LinkedIn
+                </a>
+                {% endif %}
+                {% if perfil.github %}
+                <a href="{{ perfil.github }}" target="_blank" class="btn btn-outline-dark me-2 mb-2">
+                    <i class="bi bi-github"></i> GitHub
+                </a>
+                {% endif %}
+                {% if perfil.twitter %}
+                <a href="{{ perfil.twitter }}" target="_blank" class="btn btn-outline-info me-2 mb-2">
+                    <i class="bi bi-twitter"></i> Twitter
+                </a>
+                {% endif %}
+                {% if perfil.instagram %}
+                <a href="{{ perfil.instagram }}" target="_blank" class="btn btn-outline-danger me-2 mb-2">
+                    <i class="bi bi-instagram"></i> Instagram
+                </a>
+                {% endif %}
+            </div>
+        </div>
+        
+        <div class="col-lg-8">
+            <h2 class="section-title mb-4">Biografía</h2>
+            <div class="mb-5">
+                <p>{{ perfil.biografia|linebreaks }}</p>
+            </div>
+            
+            {% if perfil.objetivos %}
+            <h2 class="section-title mb-4">Objetivos Profesionales</h2>
+            <div class="mb-5">
+                <p>{{ perfil.objetivos|linebreaks }}</p>
+            </div>
+            {% endif %}
+            
+            <h2 class="section-title mb-4">Habilidades</h2>
+            {% if habilidades_por_categoria %}
+                {% for categoria, habilidades in habilidades_por_categoria.items %}
+                <div class="mb-4">
+                    <h4 class="mb-3">{{ categoria }}</h4>
+                    {% for habilidad in habilidades %}
+                    <div class="skill-item">
+                        <div class="d-flex justify-content-between mb-2">
+                            <strong>{{ habilidad.nombre }}</strong>
+                            <span class="badge bg-primary">{{ habilidad.get_nivel_display }}</span>
+                        </div>
+                        {% if habilidad.descripcion %}
+                        <p class="small text-muted mb-0">{{ habilidad.descripcion }}</p>
+                        {% endif %}
+                    </div>
+                    {% endfor %}
+                </div>
+                {% endfor %}
+            {% else %}
+            <p class="text-muted">Las habilidades se mostrarán aquí cuando las agregues desde el panel de administración.</p>
+            {% endif %}
+            
+            <div class="text-center mt-5">
+                <a href="{% url 'contacto' %}" class="btn btn-primary btn-lg">
+                    <i class="bi bi-envelope me-2"></i>Contáctame
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+{% else %}
+<section class="container mt-5 pt-5 mb-5 text-center">
+    <h1 class="section-title mb-4">Acerca de Mí</h1>
+    <p class="text-muted">La información de perfil se mostrará aquí una vez que la agregues desde el panel de administración.</p>
+    <a href="{% url 'inicio' %}" class="btn btn-primary mt-3">Volver al Inicio</a>
+</section>
+{% endif %}
+{% endblock %}
+

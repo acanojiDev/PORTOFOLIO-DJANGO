@@ -1,0 +1,113 @@
+{% extends 'portfolio/base.html' %}
+
+{% block title %}Contacto - Portfolio Profesional{% endblock %}
+
+{% block content %}
+<section class="container mt-5 pt-5 mb-5">
+    <h1 class="section-title text-center mb-5">Contacto</h1>
+    
+    <div class="row">
+        <div class="col-lg-4 mb-5">
+            <h3 class="mb-4">Información de Contacto</h3>
+            {% if perfil %}
+            <div class="mb-4">
+                <p><i class="bi bi-envelope me-2"></i> <a href="mailto:{{ perfil.email }}">{{ perfil.email }}</a></p>
+                {% if perfil.telefono %}
+                <p><i class="bi bi-telephone me-2"></i> {{ perfil.telefono }}</p>
+                {% endif %}
+                {% if perfil.ubicacion %}
+                <p><i class="bi bi-geo-alt me-2"></i> {{ perfil.ubicacion }}</p>
+                {% endif %}
+            </div>
+            
+            <div class="mb-4">
+                <h5 class="mb-3">Sígueme en:</h5>
+                <div>
+                    {% if perfil.linkedin %}
+                    <a href="{{ perfil.linkedin }}" target="_blank" class="btn btn-outline-primary me-2 mb-2">
+                        <i class="bi bi-linkedin"></i> LinkedIn
+                    </a>
+                    {% endif %}
+                    {% if perfil.github %}
+                    <a href="{{ perfil.github }}" target="_blank" class="btn btn-outline-dark me-2 mb-2">
+                        <i class="bi bi-github"></i> GitHub
+                    </a>
+                    {% endif %}
+                    {% if perfil.twitter %}
+                    <a href="{{ perfil.twitter }}" target="_blank" class="btn btn-outline-info me-2 mb-2">
+                        <i class="bi bi-twitter"></i> Twitter
+                    </a>
+                    {% endif %}
+                    {% if perfil.instagram %}
+                    <a href="{{ perfil.instagram }}" target="_blank" class="btn btn-outline-danger me-2 mb-2">
+                        <i class="bi bi-instagram"></i> Instagram
+                    </a>
+                    {% endif %}
+                </div>
+            </div>
+            {% else %}
+            <p class="text-muted">La información de contacto se mostrará aquí cuando la agregues desde el panel de administración.</p>
+            {% endif %}
+        </div>
+        
+        <div class="col-lg-8">
+            <h3 class="mb-4">Envíame un Mensaje</h3>
+            <form method="post" class="needs-validation" novalidate>
+                {% csrf_token %}
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label for="{{ form.nombre.id_for_label }}" class="form-label">{{ form.nombre.label }}</label>
+                        {{ form.nombre }}
+                        {% if form.nombre.errors %}
+                        <div class="text-danger small">{{ form.nombre.errors }}</div>
+                        {% endif %}
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label for="{{ form.email.id_for_label }}" class="form-label">{{ form.email.label }}</label>
+                        {{ form.email }}
+                        {% if form.email.errors %}
+                        <div class="text-danger small">{{ form.email.errors }}</div>
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <label for="{{ form.asunto.id_for_label }}" class="form-label">{{ form.asunto.label }}</label>
+                    {{ form.asunto }}
+                    {% if form.asunto.errors %}
+                    <div class="text-danger small">{{ form.asunto.errors }}</div>
+                    {% endif %}
+                </div>
+                <div class="mb-3">
+                    <label for="{{ form.mensaje.id_for_label }}" class="form-label">{{ form.mensaje.label }}</label>
+                    {{ form.mensaje }}
+                    {% if form.mensaje.errors %}
+                    <div class="text-danger small">{{ form.mensaje.errors }}</div>
+                    {% endif %}
+                </div>
+                <button type="submit" class="btn btn-primary btn-lg">
+                    <i class="bi bi-send me-2"></i>Enviar Mensaje
+                </button>
+            </form>
+        </div>
+    </div>
+</section>
+
+{% block extra_js %}
+<script>
+(function() {
+    'use strict';
+    var forms = document.querySelectorAll('.needs-validation');
+    Array.prototype.slice.call(forms).forEach(function(form) {
+        form.addEventListener('submit', function(event) {
+            if (!form.checkValidity()) {
+                event.preventDefault();
+                event.stopPropagation();
+            }
+            form.classList.add('was-validated');
+        }, false);
+    });
+})();
+</script>
+{% endblock %}
+{% endblock %}
+

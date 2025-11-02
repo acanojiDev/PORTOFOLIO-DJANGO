@@ -1,0 +1,82 @@
+{% extends 'portfolio/base.html' %}
+
+{% block title %}{{ trabajo.titulo }} - Portfolio Profesional{% endblock %}
+
+{% block content %}
+<section class="container mt-5 pt-5 mb-5">
+    <div class="row">
+        <div class="col-lg-8 mx-auto">
+            {% if trabajo.imagen %}
+            <img src="{{ trabajo.imagen.url }}" class="img-fluid rounded mb-4" alt="{{ trabajo.titulo }}" style="max-height: 500px; width: 100%; object-fit: cover;">
+            {% endif %}
+            
+            <div class="mb-4">
+                <span class="badge-custom">{{ trabajo.get_tipo_display }}</span>
+                {% if trabajo.fecha_realizacion %}
+                <span class="text-muted ms-3">
+                    <i class="bi bi-calendar me-1"></i>{{ trabajo.fecha_realizacion|date:"F Y" }}
+                </span>
+                {% endif %}
+            </div>
+            
+            <h1 class="section-title mb-4">{{ trabajo.titulo }}</h1>
+            
+            <div class="mb-4">
+                <p class="lead">{{ trabajo.descripcion }}</p>
+            </div>
+            
+            {% if trabajo.tecnologias %}
+            <div class="mb-4">
+                <h3>Tecnologías Utilizadas</h3>
+                <div class="d-flex flex-wrap gap-2">
+                    {% for tech in trabajo.tecnologias_lista %}
+                    <span class="badge bg-secondary">{{ tech }}</span>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endif %}
+            
+            <div class="mb-4">
+                {% if trabajo.url_proyecto %}
+                <a href="{{ trabajo.url_proyecto }}" target="_blank" class="btn btn-primary me-2">
+                    <i class="bi bi-box-arrow-up-right me-2"></i>Ver Proyecto
+                </a>
+                {% endif %}
+                {% if trabajo.url_repositorio %}
+                <a href="{{ trabajo.url_repositorio }}" target="_blank" class="btn btn-outline-primary">
+                    <i class="bi bi-github me-2"></i>Repositorio
+                </a>
+                {% endif %}
+            </div>
+            
+            <hr class="my-5">
+            
+            {% if trabajos_relacionados %}
+            <h3 class="mb-4">Trabajos Relacionados</h3>
+            <div class="row">
+                {% for trabajo_rel in trabajos_relacionados %}
+                <div class="col-md-4 mb-3">
+                    <div class="card">
+                        {% if trabajo_rel.imagen %}
+                        <img src="{{ trabajo_rel.imagen.url }}" class="card-img-top" alt="{{ trabajo_rel.titulo }}" style="height: 150px; object-fit: cover;">
+                        {% endif %}
+                        <div class="card-body">
+                            <h6 class="card-title">{{ trabajo_rel.titulo }}</h6>
+                            <a href="{% url 'trabajo_detalle' trabajo_rel.id %}" class="btn btn-sm btn-outline-primary">Ver Más</a>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            {% endif %}
+            
+            <div class="text-center mt-5">
+                <a href="{% url 'trabajos' %}" class="btn btn-outline-secondary">
+                    <i class="bi bi-arrow-left me-2"></i>Volver a Trabajos
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
