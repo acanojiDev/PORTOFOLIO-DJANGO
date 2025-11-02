@@ -2,6 +2,23 @@
 
 Sitio web profesional desarrollado con Django que funciona como escaparate profesional, portfolio o curriculum digital.
 
+## Inicio
+<img width="1915" height="447" alt="Captura de pantalla 2025-11-02 161856" src="https://github.com/user-attachments/assets/74594347-cb40-4e63-b25e-886d73c69a70" />
+## Trabajos
+<img width="1919" height="524" alt="Captura de pantalla 2025-11-02 161929" src="https://github.com/user-attachments/assets/027b0a8c-704c-4bd7-8896-28407678d01b" />
+## Curriculum
+<img width="1899" height="871" alt="Captura de pantalla 2025-11-02 162038" src="https://github.com/user-attachments/assets/30a203bf-4f84-4821-ac2a-409364a64789" />
+## Tecnologías
+<img width="1908" height="856" alt="Captura de pantalla 2025-11-02 162100" src="https://github.com/user-attachments/assets/814c7b68-0b11-4f1a-a4aa-bf599f204cc8" />
+## Acerca de mí
+<img width="1908" height="856" alt="Captura de pantalla 2025-11-02 162100" src="https://github.com/user-attachments/assets/88a7a82e-988b-4443-98db-ca0233154045" />
+## Contacto
+<img width="1919" height="804" alt="Captura de pantalla 2025-11-02 162017" src="https://github.com/user-attachments/assets/91119a2c-781d-41c3-8b96-c824b5b98713" />
+
+
+
+
+
 ## Características
 
 - **Página de Inicio**: Visión general del perfil con trabajos destacados
